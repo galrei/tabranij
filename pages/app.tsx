@@ -10,11 +10,8 @@ import {
 export function PagesApp() {
   return (
     <main className="min-h-dvh bg-bg text-fg">
-      <section
-        id="lab"
-        className="flex h-dvh min-h-[640px] flex-col overflow-hidden lg:flex-row"
-      >
-        <div className="relative min-h-0 flex-1">
+      <section id="lab" className="lab-shell">
+        <div className="lab-stage">
           <CrystalStage />
           <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
             <a
@@ -24,6 +21,9 @@ export function PagesApp() {
               <CrystalMark className="size-7 text-primary" />
               <span className="font-display text-lg font-semibold tracking-[0.22em]">
                 TABRANIJ
+              </span>
+              <span className="rounded-full bg-primary/15 px-2 py-0.5 font-sans text-[10px] tracking-normal text-primary">
+                lab 3D
               </span>
             </a>
             <nav className="pointer-events-auto flex items-center gap-1 sm:gap-2">
@@ -52,7 +52,7 @@ export function PagesApp() {
             <BrandPill />
           </div>
         </div>
-        <aside className="relative z-20 max-h-[44vh] overflow-y-auto border-t border-border bg-surface lg:h-full lg:max-h-none lg:w-[360px] lg:shrink-0 lg:border-t-0 lg:border-l">
+        <aside className="lab-panel">
           <AnatomyPanel />
         </aside>
       </section>

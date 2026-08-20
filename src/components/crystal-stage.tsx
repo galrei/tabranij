@@ -6,7 +6,7 @@ if (typeof window !== "undefined") void loadCanvas();
 
 export function CrystalFallback() {
   return (
-    <div className="absolute inset-0 grid place-items-center bg-bg">
+    <div className="crystal-stage-fill grid place-items-center bg-bg">
       <div className="flex flex-col items-center gap-4">
         <div className="crystal-fallback" />
         <p className="font-display text-xs tracking-[0.28em] text-muted uppercase">

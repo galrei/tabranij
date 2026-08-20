@@ -1,34 +1,58 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
-  Environment,
   Grid,
   Html,
-  Lightformer,
   Line,
   OrbitControls,
   Sparkles,
   Text,
 } from "@react-three/drei";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { ANATOMY_BY_ID, pricesToLayout, type PartId } from "@/lib/anatomy";
 import { buildCrystalGeometry } from "@/lib/crystal-geometry";
 import { useTabranij } from "@/lib/tabranij-store";
 import { useMediaQuery, usePrefersReducedMotion } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
+function RoomEnv() {
+  const scene = useThree((s) => s.scene);
+  const gl = useThree((s) => s.gl);
+  useLayoutEffect(() => {
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const envScene = new RoomEnvironment();
+    const rt = pmrem.fromScene(envScene as unknown as THREE.Scene, 0.04);
+    scene.environment = rt.texture;
+    scene.environmentIntensity = 1.25;
+    return () => {
+      scene.environment = null;
+      rt.dispose();
+      pmrem.dispose();
+    };
+  }, [gl, scene]);
+  return null;
+}
+
 export default function CrystalCanvas() {
   const reduced = usePrefersReducedMotion();
   const isMobile = useMediaQuery("(max-width: 700px)");
 
   return (
-    <div className="absolute inset-0 touch-none">
+    <div className="crystal-stage-fill touch-none">
       <Canvas
         camera={{ position: [0.1, 0.2, 8.3], fov: 36, near: 0.1, far: 80 }}
         dpr={[1, 1.75]}
-        gl={{ antialias: true, powerPreference: "high-performance" }}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+        }}
+        onCreated={({ gl }) => {
+          gl.toneMappingExposure = 1.15;
+        }}
       >
         <color attach="background" args={["#05060d"]} />
         <fog attach="fog" args={["#05060d", 14, 32]} />
@@ -79,50 +103,25 @@ function Scene({
 
   return (
     <>
-      <hemisphereLight args={["#c5ddff", "#070910", 0.32]} />
-      <ambientLight intensity={0.12} />
+      <hemisphereLight args={["#c5ddff", "#070910", 0.7]} />
+      <ambientLight intensity={0.28} />
       <spotLight
         position={[5.5, 7, 5]}
-        intensity={48}
+        intensity={70}
         angle={0.55}
         penumbra={0.7}
         color="#9ed8ff"
       />
       <spotLight
         position={[-5, 1.5, 4]}
-        intensity={22}
+        intensity={36}
         angle={0.7}
         penumbra={0.8}
         color="#7a93ff"
       />
-      <pointLight position={[0, layout.yNeto, 0]} intensity={6} color="#4ec8ff" distance={5} />
+      <pointLight position={[0, layout.yNeto, 0]} intensity={10} color="#4ec8ff" distance={6} />
 
-      <Environment resolution={256} environmentIntensity={0.5}>
-        <Lightformer
-          intensity={2.2}
-          position={[5, 6, 4]}
-          scale={[7, 1.4, 1]}
-          color="#9ed8ff"
-        />
-        <Lightformer
-          intensity={1.4}
-          position={[-5, 2, 3]}
-          scale={[5, 2, 1]}
-          color="#7a93ff"
-        />
-        <Lightformer
-          intensity={1.1}
-          position={[0, -4, 2]}
-          scale={[6, 1, 1]}
-          color="#4ec8ff"
-        />
-        <Lightformer
-          intensity={0.9}
-          position={[2, 1, -6]}
-          scale={4}
-          color="#d7ecff"
-        />
-      </Environment>
+      <RoomEnv />
 
       <CrystalBody layout={layout} />
       <Wicks layout={layout} />
@@ -135,12 +134,12 @@ function Scene({
       {isMobile && <Labels layout={layout} compact />}
 
       <Sparkles
-        count={isMobile ? 18 : 36}
+        count={isMobile ? 22 : 40}
         scale={[7, 9, 6]}
-        size={1.6}
+        size={1.8}
         speed={reduced ? 0 : 0.28}
         color="#7ec8ff"
-        opacity={0.35}
+        opacity={0.5}
       />
 
       <Grid
@@ -148,10 +147,10 @@ function Scene({
         args={[20, 20]}
         cellSize={0.5}
         cellThickness={0.35}
-        cellColor="#152038"
+        cellColor="#2a4a78"
         sectionSize={2}
         sectionThickness={0.7}
-        sectionColor="#1e3358"
+        sectionColor="#3d6cac"
         fadeDistance={16}
         fadeStrength={1.3}
         infiniteGrid
@@ -178,18 +177,15 @@ function Scene({
         far={6}
         color="#03040a"
       />
-
-      {!reduced && !isMobile && (
-        <EffectComposer enableNormalPass={false} multisampling={0}>
-          <Bloom
-            intensity={0.42}
-            luminanceThreshold={0.2}
-            luminanceSmoothing={0.38}
-            mipmapBlur
-          />
-          <Vignette darkness={0.52} offset={0.3} />
-        </EffectComposer>
-      )}
+      <EffectComposer enableNormalPass={false} multisampling={0}>
+        <Bloom
+          intensity={isMobile || reduced ? 0.32 : 0.48}
+          luminanceThreshold={0.18}
+          luminanceSmoothing={0.35}
+          mipmapBlur
+        />
+        <Vignette darkness={0.45} offset={0.28} />
+      </EffectComposer>
     </>
   );
 }
@@ -218,20 +214,20 @@ function CrystalBody({ layout }: { layout: Layout }) {
         color={layout.bullish ? "#d2f1ff" : "#ffe4ec"}
         roughness={0.07}
         metalness={0.04}
-        transmission={0.86}
-        thickness={1.4}
-        ior={1.52}
+        transmission={0.68}
+        thickness={1.25}
+        ior={1.5}
         clearcoat={1}
-        clearcoatRoughness={0.06}
-        iridescence={0.65}
+        clearcoatRoughness={0.05}
+        iridescence={0.7}
         iridescenceIOR={1.22}
         iridescenceThicknessRange={[140, 420]}
         attenuationColor={layout.bullish ? "#3d6ec8" : "#8a3d5a"}
-        attenuationDistance={0.95}
+        attenuationDistance={1.15}
         transparent
-        envMapIntensity={1.35}
-        emissive={active ? "#4ec8ff" : "#071018"}
-        emissiveIntensity={active ? 0.22 : 0.03}
+        envMapIntensity={1.7}
+        emissive={active ? "#4ec8ff" : "#1a4a6a"}
+        emissiveIntensity={active ? 0.38 : 0.16}
       />
     </mesh>
   );

@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@source "../pages/**/*.{html,tsx,ts}";
+@source "./**/*.{tsx,ts}";
+
 @theme {
   --color-bg: #05060d;
   --color-surface: #0c1220;
@@ -72,6 +75,50 @@
 
 .crystal-html button {
   pointer-events: auto;
+}
+
+.crystal-stage-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lab-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 640px;
+  overflow: hidden;
+}
+@media (min-width: 64rem) {
+  .lab-shell {
+    flex-direction: row;
+  }
+}
+.lab-stage {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+}
+.lab-panel {
+  position: relative;
+  z-index: 20;
+  max-height: 44vh;
+  overflow-y: auto;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+@media (min-width: 64rem) {
+  .lab-panel {
+    max-height: none;
+    height: 100%;
+    width: 360px;
+    flex-shrink: 0;
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
 }
 
 .crystal-fallback {
