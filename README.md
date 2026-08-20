@@ -26,6 +26,10 @@ Empat turunan:
 
 Neto bukan harga. Neto adalah tubuh yang lahir dari Awal (pembuka) dan Inti (kini / tutup).
 
+## Halaman publik
+
+Lab 3D: [galrei.github.io/tabranij](https://galrei.github.io/tabranij/)
+
 ## Menjalankan
 
 ```bash
