@@ -105,7 +105,7 @@
 .lab-panel {
   position: relative;
   z-index: 20;
-  max-height: 44vh;
+  max-height: 38vh;
   overflow-y: auto;
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -114,11 +114,26 @@
   .lab-panel {
     max-height: none;
     height: 100%;
-    width: 360px;
+    width: 400px;
     flex-shrink: 0;
     border-top: 0;
     border-left: 1px solid var(--color-border);
   }
+}
+
+input[type="number"].param-num {
+  width: 5.6rem;
+  border: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+  color: var(--color-fg);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  text-align: right;
+  padding: 4px 8px;
+}
+input[type="number"].param-num:focus {
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 55%, transparent);
 }
 
 .crystal-fallback {
@@ -157,7 +172,7 @@ input[type="range"] {
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 4px;
+  height: 6px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--color-fg) 12%, transparent);
 }
@@ -165,24 +180,24 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   margin-top: -6px;
   border-radius: 999px;
-  background: var(--color-fg);
+  background: var(--color-primary);
   box-shadow: var(--shadow-border);
 }
 
 input[type="range"]::-moz-range-track {
-  height: 4px;
+  height: 6px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--color-fg) 12%, transparent);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border: 0;
   border-radius: 999px;
-  background: var(--color-fg);
+  background: var(--color-primary);
 }

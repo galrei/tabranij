@@ -8,7 +8,7 @@ export function Encyclopedia() {
 
   return (
     <section id="anatomi" className="relative z-10 bg-bg px-4 py-16 sm:px-8 sm:py-24">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <p className="font-display text-xs tracking-[0.28em] text-primary uppercase">
           Delapan unsur
         </p>
@@ -68,7 +68,7 @@ export function Encyclopedia() {
           <img
             src={`${import.meta.env.BASE_URL}tabranij-source.jpg`}
             alt="Diagram sumber TABRANIJ: kristal harga dengan label Tinggi, Atas, Inti, Neto, Awal, Bawah, Rendah, dan Julat."
-            className="mx-auto max-h-[420px] w-full object-contain outline outline-1 -outline-offset-1 outline-fg/10"
+            className="mx-auto max-h-[min(78vh,880px)] w-full object-contain outline outline-1 -outline-offset-1 outline-fg/10"
           />
         </div>
 

@@ -6,17 +6,17 @@ import {
   ANATOMY_BY_ID,
   HARGA_PARTS,
   PRESETS,
+  PRICE_MAX,
+  PRICE_MIN,
   TURUNAN_PARTS,
   derivedOf,
   seededSeries,
+  sliderDomain,
 } from "@/lib/anatomy";
 import { useTabranij } from "@/lib/tabranij-store";
 import { Button } from "@/components/ui/button";
 import { CandleGlyph, CandleStrip } from "@/components/candle-strip";
 import { cn } from "@/lib/utils";
-
-const SLIDER_MIN = 70;
-const SLIDER_MAX = 145;
 
 export function LabHint() {
   return (
@@ -77,6 +77,7 @@ export function AnatomyPanel() {
     neto: derived.neto,
     julat: derived.julat,
   };
+  const domain = sliderDomain(prices);
 
   return (
     <div className="p-4 sm:p-5">
@@ -171,10 +172,14 @@ export function AnatomyPanel() {
           {derived.naik ? "Naik" : "Turun"}
         </span>
       </div>
+      <p className="mb-3 text-[11px] leading-relaxed text-muted">
+        Empat harga bebas, 0–{domain.max.toLocaleString("id-ID")}. Ketik nilai
+        hingga {PRICE_MAX.toLocaleString("id-ID")} — rentang slider mengikuti.
+      </p>
 
-      <div className="mb-3 flex items-center gap-3">
-        <CandleGlyph prices={prices} className="h-16 w-7 text-muted" />
-        <div className="min-w-0 flex-1 space-y-2">
+      <div className="mb-4 flex items-start gap-3">
+        <CandleGlyph prices={prices} className="mt-4 h-28 w-8 shrink-0 text-muted" />
+        <div className="min-w-0 flex-1 space-y-3">
           {HARGA_PARTS.map((id) => {
             const item = ANATOMY_BY_ID[id];
             return (
@@ -183,6 +188,8 @@ export function AnatomyPanel() {
                 label={item.name}
                 color={item.color}
                 value={prices[id]}
+                min={domain.min}
+                max={domain.max}
                 onChange={(v) => patchPrices({ [id]: v })}
                 onFocus={() => select(id)}
               />
@@ -258,34 +265,51 @@ function PriceSlider({
   label,
   color,
   value,
+  min,
+  max,
   onChange,
   onFocus,
 }: {
   label: string;
   color: string;
   value: number;
+  min: number;
+  max: number;
   onChange: (v: number) => void;
   onFocus: () => void;
 }) {
   return (
-    <label className="flex items-center gap-2">
-      <span className="w-14 shrink-0 text-xs font-medium" style={{ color }}>
-        {label}
+    <label className="block">
+      <span className="mb-1 flex items-center justify-between gap-2">
+        <span className="text-xs font-medium" style={{ color }}>
+          {label}
+        </span>
+        <input
+          type="number"
+          className="param-num"
+          min={PRICE_MIN}
+          max={PRICE_MAX}
+          step={0.01}
+          value={value}
+          onFocus={onFocus}
+          onChange={(e) => {
+            const n = Number(e.target.value);
+            if (Number.isFinite(n)) onChange(n);
+          }}
+          aria-label={`${label} angka`}
+        />
       </span>
       <input
         type="range"
-        min={SLIDER_MIN}
-        max={SLIDER_MAX}
+        className="w-full"
+        min={min}
+        max={max}
         step={0.1}
-        value={value}
+        value={Math.min(max, Math.max(min, value))}
         onChange={(e) => onChange(Number(e.target.value))}
         onPointerDown={onFocus}
-        className="min-w-0 flex-1"
         aria-label={label}
       />
-      <span className="w-12 text-right font-display text-xs tabular-nums text-fg">
-        {value.toFixed(1)}
-      </span>
     </label>
   );
 }

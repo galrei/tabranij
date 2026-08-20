@@ -43,7 +43,7 @@ export default function CrystalCanvas() {
   return (
     <div className="crystal-stage-fill touch-none">
       <Canvas
-        camera={{ position: [0.1, 0.2, 8.3], fov: 36, near: 0.1, far: 80 }}
+        camera={{ position: [0.08, 0.12, 6.55], fov: 33, near: 0.1, far: 80 }}
         dpr={[1, 1.75]}
         gl={{
           antialias: true,
@@ -80,8 +80,8 @@ function Controls({ reduced }: { reduced: boolean }) {
       enablePan={false}
       enableDamping
       dampingFactor={0.08}
-      minDistance={4.2}
-      maxDistance={14}
+      minDistance={3.2}
+      maxDistance={16}
       minPolarAngle={Math.PI * 0.18}
       maxPolarAngle={Math.PI * 0.82}
       autoRotate={autoRotate && !reduced}

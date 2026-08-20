@@ -177,16 +177,40 @@ export const DEFAULT_PRICES: Prices = {
   rendah: 96.4,
 };
 
+export const PRICE_MIN = 0;
+export const PRICE_MAX = 100_000;
+
 export function round2(n: number) {
   return Math.round(n * 100) / 100;
 }
 
+function clampPrice(n: number) {
+  if (!Number.isFinite(n)) return PRICE_MIN;
+  return round2(Math.min(PRICE_MAX, Math.max(PRICE_MIN, n)));
+}
+
 export function sanitizePrices(raw: Prices): Prices {
-  const awal = round2(raw.awal);
-  const inti = round2(raw.inti);
-  const tinggi = round2(Math.max(raw.tinggi, awal, inti));
-  const rendah = round2(Math.min(raw.rendah, awal, inti));
+  const awal = clampPrice(raw.awal);
+  const inti = clampPrice(raw.inti);
+  const tinggi = clampPrice(Math.max(raw.tinggi, awal, inti));
+  const rendah = clampPrice(Math.min(raw.rendah, awal, inti));
   return { tinggi, awal, inti, rendah };
+}
+
+export function sliderDomain(prices: Prices): { min: number; max: number } {
+  const peak = Math.max(
+    prices.tinggi,
+    prices.awal,
+    prices.inti,
+    prices.rendah,
+    1,
+  );
+  const raw = Math.max(500, peak * 1.8);
+  const grain = raw >= 5000 ? 1000 : raw >= 1000 ? 250 : 50;
+  return {
+    min: PRICE_MIN,
+    max: Math.min(PRICE_MAX, Math.ceil(raw / grain) * grain),
+  };
 }
 
 export function derivedOf(p: Prices): Derived {
@@ -222,7 +246,7 @@ export type CrystalLayout = {
   julatH: number;
 };
 
-export const JULAT_WORLD = 4.7;
+export const JULAT_WORLD = 5.45;
 
 export function pricesToLayout(p: Prices): CrystalLayout {
   const d = derivedOf(p);
@@ -248,7 +272,7 @@ export function pricesToLayout(p: Prices): CrystalLayout {
     bodyH: span,
     tipH,
     crystalY: yNeto,
-    radius: 0.92,
+    radius: 1.12,
     upperWick: Math.max(0, yHigh - (yBodyTop + tipH * 0.15)),
     lowerWick: Math.max(0, yBodyBot - tipH * 0.15 - yLow),
     bullish: d.naik,
