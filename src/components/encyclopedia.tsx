@@ -66,7 +66,7 @@ export function Encyclopedia() {
 
         <div className="mt-14 overflow-hidden rounded-xl bg-surface shadow-[var(--shadow-border)]">
           <img
-            src="/tabranij-source.jpg"
+            src={`${import.meta.env.BASE_URL}tabranij-source.jpg`}
             alt="Diagram sumber TABRANIJ: kristal harga dengan label Tinggi, Atas, Inti, Neto, Awal, Bawah, Rendah, dan Julat."
             className="mx-auto max-h-[420px] w-full object-contain outline outline-1 -outline-offset-1 outline-fg/10"
           />

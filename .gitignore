@@ -10,3 +10,5 @@ screenshots
 .env
 .env.*
 .project_id
+
+dist-pages

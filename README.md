@@ -30,6 +30,9 @@ Neto bukan harga. Neto adalah tubuh yang lahir dari Awal (pembuka) dan Inti (kin
 
 Lab 3D: [galrei.github.io/tabranij](https://galrei.github.io/tabranij/)
 
+Halaman itu adalah *build* dari kode React Three Fiber yang sama (`npm run build:pages`), bukan salinan HTML.
+
+
 ## Menjalankan
 
 ```bash
